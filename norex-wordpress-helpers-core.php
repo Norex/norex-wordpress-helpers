@@ -22,7 +22,7 @@ define('TS_TIME_24_SEC', 'g:i:s');
 define('TS_TIME_24', 'G:i');
 
 //print_r any number of paramters and wrap them in <pre> tags
-function pre() {
+function nx_pre() {
     $args = func_get_args();
     if (is_array($args) && !empty($args)) {
         foreach ($args as $a) {
@@ -34,20 +34,20 @@ function pre() {
 }
 
 //hold on to the original post before you overwrite it
-function preserve_post() {
+function nx_preserve_post() {
     global $post, $opost;
     $opost = $post;
 }
 
 //restore original post after you've overwritten it for something
-function restore_post() {
+function nx_restore_post() {
     global $post, $opost;
     $post = $opost;
     setup_postdata($post);
 }
 
 //get_the_content() doesn't use filters, this will apply filters first
-function formatted_content() {
+function nx_formatted_content() {
     global $post;
     $r = false;
     if ($post) {
@@ -58,7 +58,7 @@ function formatted_content() {
     return $r;
 }
 
-function formatted_post_content($post) {
+function nx_formatted_post_content($post) {
     $r = false;
     if ($post) {
         if (isset($post->post_content)) {
@@ -69,7 +69,7 @@ function formatted_post_content($post) {
 }
 
 //get_the_excerpt() doesn't use filters, this will apply filters first
-function formatted_excerpt() {
+function nx_formatted_excerpt() {
     global $post;
     $r = false;
     if ($post) {
@@ -80,7 +80,7 @@ function formatted_excerpt() {
     return $r;
 }
 
-function get_the_content_by_id($post_id) {
+function nx_get_the_content_by_id($post_id) {
     global $post;  
     $save_post = $post;
     $post = get_post($post_id);
@@ -93,7 +93,7 @@ function get_the_content_by_id($post_id) {
     return $output;
 }
 
-function get_the_excerpt_by_id($post_id, $length=false) {
+function nx_get_the_excerpt_by_id($post_id, $length=false) {
     global $post;  
     $save_post = $post;
     $post = get_post($post_id);
@@ -130,7 +130,7 @@ function get_the_excerpt_by_id($post_id, $length=false) {
     return $final_excerpt;
 }
 
-function get_the_date_by_id($post_id, $format = false) {
+function nx_get_the_date_by_id($post_id, $format = false) {
     global $post;  
     $save_post = $post;
     $post = get_post($post_id);
@@ -144,7 +144,7 @@ function get_the_date_by_id($post_id, $format = false) {
 }
 
 //I got sick of writting if(is_array($arr) && !empty($arr)){
-function array_clean($arr) {
+function nx_array_clean($arr) {
     return (is_array($arr) && !empty($arr));
 }
 
@@ -179,7 +179,7 @@ function array_clean($arr) {
  * drillset($array,1,7,"Monkey","Colour",0,0,0,0);
  * all of the above will return "P" because the Nth element of a string is the Nth character
  */
-function drillset() {
+function nx_drillset() {
     $arr = func_get_args();
     $valid = false;
     $curObj = false;
@@ -203,7 +203,7 @@ function drillset() {
     
 }
 
-function get_image($int, $size) {
+function nx_get_image($int, $size) {
     $r = false;
     if (positiveInt($int)) {
         $img = wp_get_attachment_image_src($int, $size, false);
@@ -213,7 +213,7 @@ function get_image($int, $size) {
     return $r;
 }
 
-function array_group($arr) {
+function nx_array_group($arr) {
     $r = false;
     if (array_clean($arr)) {
         foreach ($arr as $index => $array) {
@@ -228,18 +228,18 @@ function array_group($arr) {
     return $r;
 }
 
-function sanitize(&$s, $extreme=false) {
+function nx_sanitize(&$s, $extreme=false) {
     $s = str_replace(' ', '', $s);
     $s = strtolower($s);
     if ($extreme)
         $s = ereg_replace("[^A-Za-z0-9_]", "", $s);
 }
 
-function positive_int($i) {
+function nx_positive_int($i) {
     return (is_numeric($i) && $i > 0);
 }
 
-function update_user_email($email, $userID=false) {
+function nx_update_user_email($email, $userID=false) {
     global $current_user;
     get_currentuserinfo();
     $r = false;
@@ -262,23 +262,23 @@ function update_user_email($email, $userID=false) {
     return $r;
 }
 
-function cur2float($cur) {
+function nx_cur2float($cur) {
     $cur = str_replace('$', '', $cur);
     $cur = str_replace(',', '', $cur);
     return $cur;
 }
 
-function num2cur(&$num) {
+function nx_num2cur(&$num) {
     $num = str_replace(',', '', $num);
     $num = '$' . number_format($num, 2);
 }
 
-function ts_to_human(&$ts, $format=TS_DATETIME_ABBR) {
+function nx_ts_to_human(&$ts, $format=TS_DATETIME_ABBR) {
     $ts = date($format, $ts);
     return $ts;
 }
 
-function nxpress_select($args) {
+function nx_nxpress_select($args) {
     $r = false;
     $kv = $args['kv'] ? $args['kv'] : false;
     $class = $args['class'] ? ' class="' . $args['class'] . '" ' : '';
@@ -325,7 +325,7 @@ function nxpress_select($args) {
     return $r;
 }
 
-function get_url_qs($newParams=false, $remove=false) {
+function nx_get_url_qs($newParams=false, $remove=false) {
     $string = '';
     $params = array();
     if (array_clean($_GET))
@@ -364,7 +364,7 @@ function get_url_qs($newParams=false, $remove=false) {
 /**
  * Gets the current URL of the page
  */
-function get_url() {
+function nx_get_url() {
     $pageURL = 'http';
     if ($_SERVER["HTTPS"] == "on")
         $pageURL .= "s";
@@ -378,12 +378,12 @@ function get_url() {
     return $pageURL;
 }
 
-function preg_alphanumeric(&$string) {
+function nx_preg_alphanumeric(&$string) {
     $string = preg_replace('/[^a-zA-Z0-9\s]/', ' ', $string);
     return $string;
 }
 
-function boolInt($bool) {
+function nx_bool_int($bool) {
     if ($bool)
         return 1;
     return 0;
@@ -632,7 +632,7 @@ function nx_user_search($get_key = 'q', $user_types = array('agent' => 'Agent'))
     return array_clean($user_results) ? $user_results : false;
 }
 
-function smart_truncate($string, $chars=50, $sep=' ', $cont='...') {
+function nx_smart_truncate($string, $chars=50, $sep=' ', $cont='...') {
     $parts = explode($sep, $string);
     if (is_array($parts)) {
         $string = '';
@@ -655,7 +655,7 @@ function smart_truncate($string, $chars=50, $sep=' ', $cont='...') {
 }
 
 //Allow any chars in a user name, use wp_create_unsanitary_user instead of wp_create_user, use with caution
-function wp_create_unsanitary_user($user_name, $random_password, $user_email) {
+function nx_wp_create_unsanitary_user($user_name, $random_password, $user_email) {
     global $UNSANITARY_username;
     $UNSANITARY_username = $user_name;
     $user_id = wp_create_user($user_name, $random_password, $user_email);
@@ -677,14 +677,14 @@ function nx_unsanitary_sanitize_user($un) {
 
 add_filter('pre_user_login', 'nx_unsanitary_sanitize_user');
 
-function get_attachment_id_from_src($image_src) {
+function nx_get_attachment_id_from_src($image_src) {
     global $wpdb;
     $query = "SELECT ID FROM {$wpdb->posts} WHERE guid='$image_src'";
     $id = $wpdb->get_var($query);
     return $id;
 }
 
-function manual_resize($path, $w, $h, $crop=true) {
+function nx_manual_resize($path, $w, $h, $crop=true) {
     if(strpos($path, get_option('siteurl').'/')!==false){
         $path = str_replace(get_option('siteurl').'/', ABSPATH, $path);
     }
@@ -701,7 +701,7 @@ function manual_resize($path, $w, $h, $crop=true) {
     return $resized_name;
 }
 
-function dir_to_url($dir){
+function nx_dir_to_url($dir){
     $dir = explode('/', $dir);
     $found_wp_content = false;
     foreach($dir as $k => $v){
@@ -721,7 +721,7 @@ function dir_to_url($dir){
  * Gets all the site users along with their meta information.
  * @return array 
  */
-function get_users_with_meta($args = array()) {
+function nx_get_users_with_meta($args = array()) {
     $defaults = array(
         'role' => ''
         );
@@ -820,7 +820,7 @@ function nx_get_the_excerpt($length) {
     return $final_excerpt;
 }
 
-function get_dynamic_sidebar($index = 1) {
+function nx_get_dynamic_sidebar($index = 1) {
     $sidebar_contents = "";
     ob_start();
     dynamic_sidebar($index);
@@ -828,16 +828,16 @@ function get_dynamic_sidebar($index = 1) {
     return $sidebar_contents;
 }
 
-function get_field_image($postID, $field_name, $size){
+function nx_get_field_image($postID, $field_name, $size){
     $id = get_field($field_name, $postID);
     return get_image($id, $size);
 }
 
-function in_admin(){
+function nx_in_admin(){
     return strpos($_SERVER['HTTP_REFERER'], 'wp-admin') !== false;
 }
 
-function get_option_by_blog($option, $default=false, $blog=1){
+function nx_get_option_by_blog($option, $default=false, $blog=1){
     switch_to_blog($blog);
     $option_value=get_option($option, $default);
     restore_current_blog();

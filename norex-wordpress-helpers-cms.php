@@ -14,7 +14,7 @@ if (!class_exists('NorexCMS')) {
     
     class NorexCMS {
         public static function support_widget(){ 
-            echo '<p style="font-size:12px;"><img style="margin:auto;display:block;" src="' . plugin_dir_url(__FILE__) . '/assistance-graphic.png" alt="Need Help?" /><br />Need help? <abbr title="+1 (902) 444-3335">Call</abbr> or <a href="mailto:support@norex.ca">email</a> Norex, our support line is +1 (902) 444-3335.<br /><br />We\'re also available on the web at <a href="http://norex.ca">www.norex.ca</a></p>';
+            echo '<p style="font-size:12px;"><img style="margin:auto;display:block;" src="' . plugin_dir_url(__FILE__) . 'assets/images/assistance-graphic.png" alt="Need Help?" /><br />Need help? <abbr title="+1 (902) 444-3335">Call</abbr> or <a href="mailto:support@norex.ca">email</a> Norex, our support line is +1 (902) 444-3335.<br /><br />We\'re also available on the web at <a href="http://norex.ca">www.norex.ca</a></p>';
         }
       
         public static function create_widgets(){

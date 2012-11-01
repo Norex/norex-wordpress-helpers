@@ -12,13 +12,30 @@ define('NOREX_HELPERS', true);
 
 class NorexWordpressHelpers {
    
-    public function settings_init() {
-        add_settings_section('norex_wordpress_helpers_settings_section', 'Norex Wordpress Helpers Options', 'norex_wordpress_helpers_settings_callback', 'norex_wordpress_helpers_settings');
-        add_settings_field('norex_wordpress_helpers_enable_cms', 'Enable CMS', 'norex_wordpress_helpers_checkbox_callback', 'norex_wordpress_helpers_settings', 'norex_wordpress_helpers_settings_section', array('norex_wordpress_helpers_enable_cms'));
-        add_settings_field('norex_wordpress_helpers_enable_core', 'Enable Core', 'norex_wordpress_helpers_checkbox_callback', 'norex_wordpress_helpers_settings', 'norex_wordpress_helpers_settings_section', array('norex_wordpress_helpers_enable_core'));
+    public function __construct() {
+        add_action('init', array($this, 'init'));
+        add_action('admin_init', array($this, 'admin_init'));
+        add_action('admin_menu', array($this, 'admin_menu'));
+    }
+
+    public function init() {
+        if (get_option('norex_wordpress_helpers_enable_core'))
+            require_once('norex-wordpress-helpers-core.php');
+        if (get_option('norex_wordpress_helpers_enable_cms'))
+            require_once('norex-wordpress-helpers-cms.php');
+    }
+
+    public function admin_init() {
+        add_settings_section('norex_wordpress_helpers_settings_section', 'Norex Wordpress Helpers Options', array($this, 'settings_callback'),/* 'norex_wordpress_helpers_settings_callback',*/ 'norex_wordpress_helpers_settings');
+        add_settings_field('norex_wordpress_helpers_enable_cms', 'Enable CMS', array($this, 'checkbox_callback'), 'norex_wordpress_helpers_settings', 'norex_wordpress_helpers_settings_section', array('norex_wordpress_helpers_enable_cms'));
+        add_settings_field('norex_wordpress_helpers_enable_core', 'Enable Core', array($this, 'checkbox_callback'), 'norex_wordpress_helpers_settings', 'norex_wordpress_helpers_settings_section', array('norex_wordpress_helpers_enable_core'));
 
         register_setting('norex_wordpress_helpers_settings_section', 'norex_wordpress_helpers_enable_cms');
         register_setting('norex_wordpress_helpers_settings_section', 'norex_wordpress_helpers_enable_core');
+    }
+
+    public function admin_menu() {
+         add_submenu_page( 'options-general.php', 'Norex Wordpress Helpers Settings', 'Norex Wordpress Helpers Settings', 'norex_wordpress_helpers_settings', 'norex_wordpress_helpers_settings',  array($this, 'settings_display'));
     }
 
     public function settings_display() {
@@ -43,41 +60,22 @@ class NorexWordpressHelpers {
         $role = get_role('administrator');
         $role->add_cap("norex_wordpress_helpers_settings_admin");
     }
-}
 
-add_action('admin_menu', 'norex_wordpress_helpers_settings');
-function norex_wordpress_helpers_settings() {
-    $norex_wordpress_helpers = new NorexWordpressHelpers();
+    public function settings_callback() {
+         echo '<p>Select which areas of content you wish to display.</p>';  
+    }
 
-    add_menu_page('Norex Wordpress Helpers Settings', 'Norex Wordpress Helpers Settings', 'norex_wordpress_helpers_settings', 'norex_wordpress_helpers_settings', array(&$norex_wordpress_helpers, 'settings_display'));
-}
-
-add_action('admin_init', 'norex_wordpress_helpers_init_settings');
-function norex_wordpress_helpers_init_settings() {
-    $norex_wordpress_helpers = new NorexWordpressHelpers();
-    $norex_wordpress_helpers->settings_init();
-}
-
-add_action('init', 'norex_wordpress_helpers_init');
-function norex_wordpress_helpers_init() {
-    //if (get_option('norex_wordpress_helpers_enable_core'))
-        //echo 'Core Enabled';
-   // if (get_option('norex_wordpress_helpers_enable_cms'))
-        //echo 'CMS Enabled';
-}
-
-
-function norex_wordpress_helpers_settings_callback() {  
-    echo '<p>Select which areas of content you wish to display.</p>';  
-}
-
-function norex_wordpress_helpers_checkbox_callback($args) {    
-    $html = '<input type="checkbox" id="' . $args[0] . '" name="' . $args[0] . '" value="1" ' . checked(1, get_option($args[0]), false) . '/>';  
+    public function checkbox_callback($args) {
+        $html = '<input type="checkbox" id="' . $args[0] . '" name="' . $args[0] . '" value="1" ' . checked(1, get_option($args[0]), false) . '/>';  
    
-    if (isset($args[1]))
-        $html .= '<label for="' . $args[0] . '"> '  . $args[0] . '</label>';  
-    echo $html;  
-} 
+        if (isset($args[1]))
+            $html .= '<label for="' . $args[0] . '"> '  . $args[0] . '</label>';  
+        echo $html;  
+    }
+}
+
+new NorexWordpressHelpers();
 
 register_activation_hook(__FILE__, array('NorexWordpressHelpers', 'on_activate'));
+
 
